@@ -1,0 +1,23 @@
+"Schema GraphQL básico para projeto"
+type Query {
+    "Retorna uma mensagem de hello world"
+    hello: String! @field(resolver: "App\\GraphQL\\Queries\\HelloQuery")
+    
+    "Retorna informações da aplicação"
+    app: App! @field(resolver: "App\\GraphQL\\Queries\\AppQuery")
+}
+
+"Informações da aplicação"
+type App {
+    "Nome da aplicação"
+    name: String!
+    
+    "Versão da aplicação"
+    version: String!
+    
+    "Ambiente (local, production, etc)"
+    env: String!
+    
+    "URL base da aplicação"
+    url: String!
+}

@@ -1,5 +1,5 @@
-# Use PHP 8.3 FPM Alpine para desenvolvimento
-FROM php:8.3-fpm-alpine
+# Use PHP 8.3 Alpine para desenvolvimento
+FROM php:8.3-cli-alpine
 
 # Instalar dependências do sistema
 RUN apk add --no-cache \
@@ -13,9 +13,7 @@ RUN apk add --no-cache \
     oniguruma-dev \
     libzip-dev \
     freetype-dev \
-    libjpeg-turbo-dev \
-    supervisor \
-    nginx
+    libjpeg-turbo-dev
 
 # Instalar extensões PHP necessárias
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
@@ -49,7 +47,7 @@ WORKDIR /var/www/html
 COPY composer.json composer.lock ./
 
 # Instalar dependências PHP como root
-RUN composer install --no-scripts --no-autoloader --no-dev
+RUN composer install --no-scripts --no-autoloader
 
 # Copiar código fonte
 COPY . .
@@ -66,10 +64,8 @@ RUN chown -R laravel:laravel /var/www/html \
 RUN mkdir -p /var/www/html/storage/logs \
     && mkdir -p /var/www/html/storage/framework/cache \
     && mkdir -p /var/www/html/storage/framework/sessions \
-    && mkdir -p /var/www/html/storage/framework/views
-
-# Copiar configuração do supervisor
-COPY --chown=laravel:laravel docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+    && mkdir -p /var/www/html/storage/framework/views \
+    && chown -R laravel:laravel /var/www/html/storage
 
 # Mudar para usuário laravel
 USER laravel
@@ -77,9 +73,9 @@ USER laravel
 # Expor porta 8000 para o servidor built-in do Laravel
 EXPOSE 8000
 
-# Health check
+# Health check simples
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:8000 || exit 1
 
 # Comando para rodar Laravel em desenvolvimento
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]

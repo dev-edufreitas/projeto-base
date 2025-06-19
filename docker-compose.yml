@@ -9,6 +9,7 @@ services:
       - "${FRONTEND_PORT}:3000"
     volumes:
       - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
     environment:
       - NODE_ENV=development
       - VITE_API_URL=http://backend:${BACKEND_PORT}/graphql
@@ -86,6 +87,8 @@ volumes:
     name: ${COMPOSE_PROJECT_NAME}_postgres_data
   backend_vendor:
     name: ${COMPOSE_PROJECT_NAME}_backend_vendor
+  frontend_node_modules:  
+    name: ${COMPOSE_PROJECT_NAME}_frontend_node_modules
 
 networks:
   projeto_network:
