@@ -1,0 +1,22 @@
+# Laravel
+/vendor
+/.env
+/node_modules
+/public/storage
+/storage/*.key
+*.log
+
+# Vue
+frontend/node_modules
+frontend/dist
+
+# Docker volumes
+docker/db-data
+docker/cache
+docker/*.sock
+
+# Outros
+*.sqlite
+.DS_Store
+.idea
+.vscode
